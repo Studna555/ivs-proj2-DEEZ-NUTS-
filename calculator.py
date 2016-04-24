@@ -77,7 +77,11 @@ def set_operation(oper):
         numbers.append(nmm)
         txtDisplay.delete(0,END)
     pressed = False
-
+    
+##
+#   Function manages pressing numbers in GUI.
+#   @Beif       Pressing numbers
+#   @Ingroup    displ
 def num_press(num):
     global new_num
     global nmm
@@ -158,10 +162,18 @@ def evaluation():
     new_num = True
     numbers = []
 
+##
+#   Function makes display showing text
+#   @Beif       Displays text
+#   @Ingroup    displ
 def display(text):
    txtDisplay.delete(0,END)
    txtDisplay.insert(0,text) 
 
+##
+#   Function for calculating factorial
+#   @Beif       Factorial
+#   @Ingroup    displ
 def factorial():
     global in_calc
     global numbers
