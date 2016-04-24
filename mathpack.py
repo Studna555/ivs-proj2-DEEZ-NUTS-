@@ -27,10 +27,9 @@ class Maths:
 
 	ans = 0 
 
-
 	##
 	#	Function adds up all entered numbers and returns the result
-	#	@Brief		Sum of all entered numbers
+	#	@Beif		Sum of all entered numbers
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
@@ -43,16 +42,15 @@ class Maths:
 			result += number
 		self.ans = result
 
-
-	##
+		##
 	#	Function substracts all numbers and returns the result
-	#	@Brief		Substract of all entered numbers
+	#	@Beif		Substract of all entered numbers
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
 	#	@Param[in] numbers Array of entered numbers
 	#
-	#	@Return Result of the substraction
+	#	@Return Result of the substract
 	def substract(self, numbers):
 		result = numbers[0]
 		iternum = iter(numbers)
@@ -61,10 +59,9 @@ class Maths:
 			result -= number
 		self.ans = result
 
-
 	##
 	#	Function multiplies entered numbers and returns the result
-	#	@Brief		Multiplication of all entered numbers
+	#	@Beif		Multiplication of all entered numbers
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
@@ -79,10 +76,9 @@ class Maths:
 			result *= number
 		self.ans = result
 
-
 	##
 	#	Function divides Dividend with Factor and returns the result
-	#	@Brief		Division of two numbers
+	#	@Beif		Division of two numbers
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
@@ -99,34 +95,32 @@ class Maths:
 			return
 		self.ans = dividend/factor
 
-
 	##
 	#	Function counts the residue after devision Dividend with Factor and returns the result
-	#	@Brief		Modulo of entered numbers
+	#	@Beif		Modulo of entered numbers
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
 	#	@Param[in] dividend Dividend
 	#	@Param[in] factor 	Factor
 	#
-	#	@Return Result of the modulo operation
+	#	@Return Result of the multiplication
 	def modulo(self, dividend, factor):
 		if factor == 0:
 			self.ans = None
 			return
 		self.ans = dividend % factor
 
-
 	##
 	#	Function intensified entered number on an exponent and returns the result
-	#	@Brief		Pow number on exponent
+	#	@Beif		Pow number on exponent
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
 	#	@Param[in] number 	Number to pow
 	#	@Param[in] exponent	Exponent
 	#
-	#	@Return Result of the power operation
+	#	@Return Result of the pow
 	def pow(self, number, exponent):
 		result = number
 		if exponent == 0:
@@ -139,10 +133,9 @@ class Maths:
 			return
 		self.ans = result
 
-
 	##
 	#	Function counts the factorial of entered number and returns the result
-	#	@Brief		Factorial of an entered number
+	#	@Beif		Factorial of an entered number
 	#	@Ingroup	ops
 	#
 	#	@Param[in,out] self	Method instance
