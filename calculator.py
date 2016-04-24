@@ -15,12 +15,18 @@
 #   @Defgroup   displ Display functions
 #   @Brief      Functions working with display content
 
-from mathpack import Mathpack
-
+from mathpack import Maths
 
 from tkinter import *
-calc = Mathpack()
+
+calc = Maths()
 number=0
+new_num = True
+in_calc = False
+nmm = 0
+numbers = []
+operation = ""
+evaled = False
 
 ##
 #   Function cleares the display, deletes all content
@@ -28,91 +34,80 @@ number=0
 #   @Ingroup    displ
 def clear():
     txtDisplay.delete(0,END)
+    global new_num
+    global in_calc
+    global numbers
+    global operation
+    global pressed
+
+    pressed = False
+    operation = ""
+    pressed = False
+    new_num = True
+    calc.ans = 0
+    in_calc = False
+    numbers = []
     return
-##
-#   Function inserts "+" for add function
-#   @Beif       Add "+""
-#   @Ingroup    displ
-def add():
-    txtDisplay.insert(number,"+")
-    return
+
+
 ##
 #   Function inserts operator
 #   @Beif       Add operator
 #   @Ingroup    displ
 def set_operation(oper):
-    operation = oper
+    global operation
+    global in_calc
+    global nmm
+    global numbers
+    global pressed
 
-##
-#   Function inserts numeral zero (0)
-#   @Beif       Add 0
-#   @Ingroup    displ
-def zero():
-    txtDisplay.insert(number,"0")
-    return
-##
-#   Function inserts numeral one (1)
-#   @Beif       Add 1
-#   @Ingroup    displ
-def one():
-    txtDisplay.insert(number,"1")
-    return
-##
-#   Function inserts numeral two (2)
-#   @Beif       Add 2
-#   @Ingroup    displ
-def two():
-    txtDisplay.insert(number,"2")
-    return
-##
-#   Function inserts numeral three (3)
-#   @Beif       Add 3
-#   @Ingroup    displ
-def three():
-    txtDisplay.insert(number,"3")
-    return
-##
-#   Function inserts numeral four (4)
-#   @Beif       Add 4
-#   @Ingroup    displ
-def four():
-    txtDisplay.insert(number,"4")
-    return
-##
-#   Function inserts numeral five (5)
-#   @Beif       Add 5
-#   @Ingroup    displ
-def five():
-    txtDisplay.insert(number,"5")
-    return
-##
-#   Function inserts numeral six
-#   @Beif       Add 6
-#   @Ingroup    displ
-def six():
-    txtDisplay.insert(number,"6")
-    return
-##
-#   Function inserts numeral seven (7)
-#   @Beif       Add 7
-#   @Ingroup    displ
-def seven():
-    txtDisplay.insert(number,"7")
-    return
-##
-#   Function inserts numeral eight (8)
-#   @Beif       Add 8
-#   @Ingroup    displ
-def eight():
-    txtDisplay.insert(number,"8")
-    return
-##
-#   Function inserts numeral nine (9)
-#   @Beif       Add 9
-#   @Ingroup    displ
-def nine():
-    txtDisplay.insert(number,"9")
-    return
+    if not pressed:
+        return
+
+    if in_calc and operation != oper:
+        return
+    elif operation == oper:
+        nmm = float(nmm)
+        numbers.append(nmm)
+        txtDisplay.delete(0,END)
+    else:
+        operation = oper
+        in_calc = True
+        nmm = float(nmm)
+        numbers.append(nmm)
+        txtDisplay.delete(0,END)
+    pressed = False
+
+def num_press(num):
+    global new_num
+    global nmm
+    global pressed
+    global displayed
+    global evaled
+
+    if evaled:
+        evaled = False
+        txtDisplay.delete(0,END)
+
+    pressed = True
+    displayed = txtDisplay.get()
+    if len(displayed) >= 10:
+        return
+    pressed = str(num)     
+    if new_num:
+        displayed = pressed
+        new_num = False
+    else:
+        displayed = txtDisplay.get()
+        if displayed == "0":
+            return
+        if pressed == ".":
+            if pressed in displayed:
+                return
+        displayed = displayed + pressed
+    nmm = displayed
+    display(displayed)
+
 
 ##
 #   Function calls operations & gets result of the mathematical operation
@@ -122,7 +117,22 @@ def nine():
 #   @Param[in] operation Required operation (+ - * / ! ** %)
 #
 #   @Return Result of the operation
-def eval(numbers, operation):
+def evaluation():
+    global in_calc
+    global numbers
+    global operation
+    global nmm
+    global pressed
+    global evaled
+    global new_num
+
+    if not pressed or operation == "":
+        return 
+
+    pressed = False
+    in_calc = False
+    nmm = float(nmm)
+    numbers.append(nmm)
     if operation == "+":
         calc.add(numbers)
     elif operation == "-":
@@ -134,14 +144,45 @@ def eval(numbers, operation):
     elif operation == "!":
         calc.factorial(number[0])
     elif operation == "**":
-        calc.pow(numbers[0], numbers[1])
+        calc.pow(int(numbers[0]), int(numbers[1]))
     elif operation == "%":
         calc.modulo(numbers[0], numbers[1])
-    return calc.ans
+    else: 
+        return
+    operation = ""
+    if calc.ans == None:
+        display("ERR")
+    else:
+        display(calc.ans)
+    evaled = True
+    new_num = True
+    numbers = []
 
-number = []
-numbers = []
-operation = ""
+def display(text):
+   txtDisplay.delete(0,END)
+   txtDisplay.insert(0,text) 
+
+def factorial():
+    global in_calc
+    global numbers
+    global nmm
+    global pressed
+    global evaled
+    global displayed
+    global new_num
+
+    if in_calc or not pressed:
+        return
+
+    nmm = int(nmm)
+    numbers.append(nmm)
+    calc.factorial(numbers[0])
+    display(calc.ans)
+    evaled = True
+    new_num = True
+    numbers = []
+
+
 
 
 root = Tk()
@@ -163,61 +204,61 @@ txtDisplay.pack(side = TOP)
 frame0 = Frame(root)
 frame0.pack(side = TOP)
 
-button1 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "+", fg="black", bg = "grey", command= set_operation("+"))
+button1 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "+", fg="black", bg = "grey", command=  lambda: set_operation("+"))
 button1.pack(side = LEFT)
-button2 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "-", fg="black", bg = "grey", command= set_operation("-") )
+button2 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "-", fg="black", bg = "grey", command=  lambda: set_operation("-") )
 button2.pack(side = LEFT)
-button3 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "*", fg="black", bg = "grey")
+button3 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "*", fg="black", bg = "grey", command=  lambda: set_operation("*"))
 button3.pack(side = LEFT)
-button4 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "/", fg="black", bg = "grey")
+button4 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "/", fg="black", bg = "grey", command=  lambda: set_operation("/"))
 button4.pack(side = LEFT)
 
 frame1 = Frame(root)
 frame1.pack (side = TOP)
 
-button1 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "7", fg="black", command = number.append(7))
+button1 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "7", fg="black", command = lambda: num_press(7))
 button1.pack(side = LEFT)
-button2 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "8", fg="black", command = number.append(8))
+button2 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "8", fg="black", command = lambda: num_press(8))
 button2.pack(side = LEFT)
-button3 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "9", fg="black", command = number.append(9))
+button3 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "9", fg="black", command = lambda: num_press(9))
 button3.pack(side = LEFT)
-button4 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "mod", fg="black", bg = "grey")
+button4 = Button(frame1, padx = 22, pady = 22, width=1, bd = 2, text = "mod", fg="black", bg = "grey", command=  lambda: set_operation("%"))
 button4.pack(side = LEFT)
 
 frame2 = Frame(root)
 frame2.pack (side = TOP)
 
-button1 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "4", fg="black", command = number.append(4))
+button1 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "4", fg="black", command = lambda: num_press(4))
 button1.pack(side = LEFT)
-button2 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "5", fg="black", command = number.append(5))
+button2 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "5", fg="black", command = lambda: num_press(5))
 button2.pack(side = LEFT)
-button3 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "6", fg="black", command = number.append(6))
+button3 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "6", fg="black", command = lambda: num_press(6))
 button3.pack(side = LEFT)
-button4 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "!", bg = "grey", fg="black")
+button4 = Button(frame2, padx = 22, pady = 22, width=1, bd = 2, text = "!", bg = "grey", fg="black", command =  factorial)
 button4.pack(side = LEFT)
 
 frame3 = Frame(root)
 frame3.pack (side = TOP)
 
-button1 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "1", fg="black", command = number.append(1))
+button1 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "1", fg="black", command = lambda: num_press(1))
 button1.pack(side = LEFT)
-button2 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "2", fg="black", command = number.append(2))
+button2 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "2", fg="black", command = lambda: num_press(2))
 button2.pack(side = LEFT)
-button3 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "3", fg="black", command = number.append(3))
+button3 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "3", fg="black", command = lambda: num_press(3))
 button3.pack(side = LEFT)
-button4 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "^", bg = "grey", fg="black")
+button4 = Button(frame3, padx = 22, pady = 22, width=1, bd = 2, text = "^", bg = "grey", fg="black", command=  lambda: set_operation("**"))
 button4.pack(side = LEFT)
 
 frame4 = Frame(root)
 frame4.pack (side = TOP)
 
-button1 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = "0", fg="black", command = number.append(0))
+button1 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = "0", fg="black", command = lambda: num_press(0))
 button1.pack(side = LEFT)
-button2 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = ".", fg="black")
+button2 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = ".", fg="black", command = lambda: num_press("."))
 button2.pack(side = LEFT)
 button3 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = "C", bg = "grey", fg="black", command = clear)
 button3.pack(side = LEFT)
-button4 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = "=", bg = "grey", fg="black", command = eval(numbers,operation))
+button4 = Button(frame4, padx = 22, pady = 22, width=1, bd = 2, text = "=", bg = "grey", fg="black", command =  lambda: evaluation())
 button4.pack(side = LEFT)
 
 
