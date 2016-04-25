@@ -31,7 +31,7 @@ pressed = False
 
 ##
 #   Function cleares the display, deletes all content
-#   @Beif       Clear display
+#   @Brief       Clear display
 #   @Ingroup    displ
 def clear():
     txtDisplay.delete(0,END)
@@ -53,7 +53,7 @@ def clear():
 
 ##
 #   Function inserts operator
-#   @Beif       Add operator
+#   @Brief       Add operator
 #   @Ingroup    displ
 def set_operation(oper):
     global operation
@@ -78,10 +78,10 @@ def set_operation(oper):
         numbers.append(nmm)
         txtDisplay.delete(0,END)
     pressed = False
-    
+
 ##
 #   Function manages pressing numbers in GUI.
-#   @Beif       Pressing numbers
+#   @Brief       Pressing numbers
 #   @Ingroup    displ
 def num_press(num):
     global new_num
@@ -104,7 +104,7 @@ def num_press(num):
         new_num = False
     else:
         displayed = txtDisplay.get()
-	    if displayed == "0" and pressed =="0":
+        if displayed == "0" and pressed =="0":
             return
         if pressed == ".":
             if pressed in displayed:
@@ -112,7 +112,6 @@ def num_press(num):
         displayed = displayed + pressed
     nmm = displayed
     display(displayed)
-
 
 ##
 #   Function calls operations & gets result of the mathematical operation
@@ -198,16 +197,21 @@ def factorial():
     new_num = True
     numbers = []
 
-	def negation():
+def negation():
     global nmm
     global pressed
+
     if not pressed:
         return
+
     displayed = txtDisplay.get()
     if displayed == "0":
         return
     nmm = -(float(displayed))
     display(nmm)   
+
+
+
 
 root = Tk()
 frame = Frame(root)
@@ -234,7 +238,6 @@ button2 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "-", 
 button2.pack(side = LEFT)
 button5 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "+/-", fg="black", bg = "grey", command=  negation)
 button5.pack(side = LEFT)
-button3 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "*", fg="black", bg = "grey", command=  lambda: set_operation("*"))
 button3 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "*", fg="black", bg = "grey", command=  lambda: set_operation("*"))
 button3.pack(side = LEFT)
 button4 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "/", fg="black", bg = "grey", command=  lambda: set_operation("/"))
