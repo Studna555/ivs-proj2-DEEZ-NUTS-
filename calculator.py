@@ -27,6 +27,7 @@ nmm = 0
 numbers = []
 operation = ""
 evaled = False
+pressed = False
 
 ##
 #   Function cleares the display, deletes all content
@@ -103,7 +104,7 @@ def num_press(num):
         new_num = False
     else:
         displayed = txtDisplay.get()
-        if displayed == "0":
+	    if displayed == "0" and pressed =="0":
             return
         if pressed == ".":
             if pressed in displayed:
@@ -189,19 +190,30 @@ def factorial():
     nmm = int(nmm)
     numbers.append(nmm)
     calc.factorial(numbers[0])
-    display(calc.ans)
+    if calc.ans == None:
+        display("ERR")
+    else:
+        display(calc.ans)
     evaled = True
     new_num = True
     numbers = []
 
-
-
+	def negation():
+    global nmm
+    global pressed
+    if not pressed:
+        return
+    displayed = txtDisplay.get()
+    if displayed == "0":
+        return
+    nmm = -(float(displayed))
+    display(nmm)   
 
 root = Tk()
 frame = Frame(root)
 frame.pack()
 
-root.geometry("235x396")
+root.geometry("235x384")
 
 root.title("Calculator")
 
@@ -216,13 +228,16 @@ txtDisplay.pack(side = TOP)
 frame0 = Frame(root)
 frame0.pack(side = TOP)
 
-button1 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "+", fg="black", bg = "grey", command=  lambda: set_operation("+"))
+button1 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "+", fg="black", bg = "grey", command=  lambda: set_operation("+"))
 button1.pack(side = LEFT)
-button2 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "-", fg="black", bg = "grey", command=  lambda: set_operation("-") )
+button2 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "-", fg="black", bg = "grey", command=  lambda: set_operation("-") )
 button2.pack(side = LEFT)
-button3 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "*", fg="black", bg = "grey", command=  lambda: set_operation("*"))
+button5 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "+/-", fg="black", bg = "grey", command=  negation)
+button5.pack(side = LEFT)
+button3 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "*", fg="black", bg = "grey", command=  lambda: set_operation("*"))
+button3 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "*", fg="black", bg = "grey", command=  lambda: set_operation("*"))
 button3.pack(side = LEFT)
-button4 = Button(frame0, padx = 22, pady = 22, width=1, bd = 2, text = "/", fg="black", bg = "grey", command=  lambda: set_operation("/"))
+button4 = Button(frame0, padx = 16.1, pady = 16.1, width=1, bd = 2, text = "/", fg="black", bg = "grey", command=  lambda: set_operation("/"))
 button4.pack(side = LEFT)
 
 frame1 = Frame(root)
